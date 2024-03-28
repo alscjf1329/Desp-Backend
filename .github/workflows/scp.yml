@@ -1,4 +1,5 @@
 name: cd
+run-name: ${{ github.actor }} is delivering jar file
 on: [push]
 jobs:
 

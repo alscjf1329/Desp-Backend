@@ -1,5 +1,5 @@
 name: ci
-run-name: ${{ github.actor }} is learning GitHub Actions
+run-name: ${{ github.actor }} ${{github.action}}
 on:
   push:
     branches: [ "main","master" ]
@@ -23,4 +23,4 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run : ./gradlew clean build
+        run: ./gradlew clean build
