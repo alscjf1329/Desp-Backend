@@ -1,4 +1,4 @@
-name: cicd1
+name: cicd12
 run-name: ${{ github.actor }} is building with gradle
 on:
   push:
