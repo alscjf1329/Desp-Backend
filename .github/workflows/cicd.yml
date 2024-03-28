@@ -11,7 +11,7 @@ on:
 permissions: read-all
 
 jobs:
-  build:
+  CI:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,13 +28,19 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
+  CD:
+    needs: CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.OCCUPY_SSH_HOST }}
-          username: ${{ secrets.OCCUPY_SSH_USERNAME }}
-          password: ${{ secrets.OCCUPY_SSH_KEY }}
-          port: ${{ secrets.OCCUPY_SSH_PORT }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
           source: "build/libs/*.jar"
           target: "source"
           rm: true
@@ -47,17 +53,18 @@ jobs:
           key: ${{ secrets.OCCUPY_SSH_KEY }}
           port: ${{ secrets.OCCUPY_SSH_PORT }}
           script: |
-            SOURCE_DIR=source/build/libs
-            FILE_NAME=`find $SOURCE_DIR/*.jar -printf "%f\n"`
-            PID=`ps -ef | grep occupying | grep sudo | grep -v "bash -c" | awk '{print $2}'`
-            
-            if [ -z "$PID" ]; then
-                    echo "#### THERE IS NO PROCESS ####"
-            else
-                    echo "#### KILL $PID ####"
-                    sudo kill $PID
-            fi
-            
-            echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
-            
-            sudo java -jar $SOURCE_DIR/$FILE_NAME > /dev/null 2>&1 &
+            whoami
+#            SOURCE_DIR=source/build/libs
+#            FILE_NAME=`find $SOURCE_DIR/*.jar -printf "%f\n"`
+#            PID=`ps -ef | grep occupying | grep sudo | grep -v "bash -c" | awk '{print $2}'`
+#
+#            if [ -z "$PID" ]; then
+#                    echo "#### THERE IS NO PROCESS ####"
+#            else
+#                    echo "#### KILL $PID ####"
+#                    sudo kill $PID
+#            fi
+#
+#            echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
+#
+#            sudo java -jar $SOURCE_DIR/$FILE_NAME > /dev/null 2>&1 &
