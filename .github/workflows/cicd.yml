@@ -31,10 +31,10 @@ jobs:
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          host: ${{ secrets.OCCUPY_SSH_HOST }}
+          username: ${{ secrets.OCCUPY_SSH_USERNAME }}
+          password: ${{ secrets.OCCUPY_SSH_KEY }}
+          port: ${{ secrets.OCCUPY_SSH_PORT }}
           source: "build/libs/*.jar"
           target: "source"
           rm: true
