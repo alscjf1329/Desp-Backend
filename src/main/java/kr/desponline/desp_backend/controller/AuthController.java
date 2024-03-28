@@ -50,4 +50,30 @@ public class AuthController {
         response.addCookie(cookie);
         return certificationResult;
     }
+
+    @PostMapping("/login")
+    public CertificationResultDTO login(
+        @RequestBody AccessCredentialDTO accessCredentialDTO,
+        HttpSession session, HttpServletResponse response) {
+
+        CertificationResultDTO certificationResult = tokenService.authenticate(
+            accessCredentialDTO.getNickname(),
+            accessCredentialDTO.getAuthenticationCode()
+        );
+
+        if (!certificationResult.isValid()) {
+            return certificationResult;
+        }
+
+        String sessionToken = UUID.randomUUID().toString();
+        session.setAttribute(sessionToken, accessCredentialDTO.getNickname());
+
+        Cookie cookie = new Cookie(SESSION_KEY_COOKIE_NAME, sessionToken);
+        cookie.setHttpOnly(true); // XSS 공격 방지
+        cookie.setSecure(true); // HTTPS를 통해서만 쿠키 전송
+        cookie.setMaxAge(3600);
+
+        response.addCookie(cookie);
+        return certificationResult;
+    }
 }
