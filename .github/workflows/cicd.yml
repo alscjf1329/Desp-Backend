@@ -28,12 +28,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-#  CD:
-#    needs: CI
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v4
+  CD:
+    needs: CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
       - name: copy file via ssh password
         uses: appleboy/scp-action@master
         with:
@@ -65,5 +65,5 @@ jobs:
             fi
 
             echo "#### RUN $SOURCE_DIR/$FILE_NAME ####"
-
-            sudo java -jar $SOURCE_DIR/$FILE_NAME > /dev/null 2>&1 &
+            
+            java -jar $SOURCE_DIR/$FILE_NAME
